@@ -12,7 +12,6 @@ const RegistrationForm = () => {
     });
 
     const [errors, setErrors] = useState({});
-    const [isSubmitted, setIsSubmitted] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -23,7 +22,6 @@ const RegistrationForm = () => {
         e.preventDefault();
         if (validateForm()) {
             console.log('Form Submitted', formData);
-            setIsSubmitted(true);
         }
     };
 
@@ -41,7 +39,7 @@ const RegistrationForm = () => {
         }
         if (!validateEmail(formData.email)) {
             isValid = false;
-            formErrors.email = 'Invalid-email';
+            formErrors.email = 'Invalid email';
         }
         if (!validateAge(formData.birthDate)) {
             isValid = false;
@@ -56,7 +54,6 @@ const RegistrationForm = () => {
         return isValid;
     };
 
-    // Avoid submit with empty fied
     const isFormValid = () => {
         return Object.values(formData).every(value => value !== '') && Object.keys(errors).length === 0;
     };
