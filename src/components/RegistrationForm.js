@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { validateEmail, validatePostalCode, validateAge, validateName } from '../utils/validators';
+import './RegistrationForm.css';
 
 const RegistrationForm = () => {
     const [formData, setFormData] = useState({
@@ -59,7 +60,7 @@ const RegistrationForm = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form className="registration-form" onSubmit={handleSubmit}>
             <div>
                 <label htmlFor="firstName">First Name</label>
                 <input id="firstName" type="text" name="firstName" value={formData.firstName} onChange={handleChange} />

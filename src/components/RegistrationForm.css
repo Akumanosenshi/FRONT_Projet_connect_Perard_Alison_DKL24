@@ -1,0 +1,36 @@
+.registration-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Aligner les enfants au début */
+    gap: 2rem; /* Espace entre les éléments */
+    margin-top: 2rem;
+}
+
+.registration-form input {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%; /* Faire en sorte que les inputs prennent toute la largeur du parent */
+}
+
+.registration-form button:enabled {
+    padding: 0.5rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.registration-form button:disabled {
+    padding: 0.5rem;
+    background-color: #7f7f7f;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.registration-form button:hover:enabled {
+    background-color: #0056b3;
+}
