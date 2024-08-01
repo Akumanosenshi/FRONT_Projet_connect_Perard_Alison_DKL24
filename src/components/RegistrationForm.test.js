@@ -28,6 +28,6 @@ test('shows error messages for invalid inputs', async () => {
     fireEvent.submit(screen.getByText(/Save/i));
 
     // Check if the error message is displayed
-    const errorMessage = await screen.findByText(/Invalid-email/i);
+    const errorMessage = await screen.findByText(/Invalid email/i);
     expect(errorMessage).toBeInTheDocument();
 });
