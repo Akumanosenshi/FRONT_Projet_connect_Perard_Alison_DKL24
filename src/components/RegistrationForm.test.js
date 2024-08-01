@@ -17,9 +17,17 @@ test('disables save button if form is incomplete', () => {
     expect(screen.getByText(/Save/i)).toBeDisabled();
 });
 
-test('shows error messages for invalid inputs', () => {
+test('shows error messages for invalid inputs', async () => {
     render(<RegistrationForm />);
+
+    // Change the email input to an invalid email
     fireEvent.change(screen.getByLabelText(/Email/i), { target: { value: 'invalid-email' } });
     fireEvent.blur(screen.getByLabelText(/Email/i));
-    expect(screen.getByText(/Invalid email/i)).toBeInTheDocument();
+
+    // Trigger form submission
+    fireEvent.submit(screen.getByText(/Save/i));
+
+    // Check if the error message is displayed
+    const errorMessage = await screen.findByText(/Invalid-email/i);
+    expect(errorMessage).toBeInTheDocument();
 });

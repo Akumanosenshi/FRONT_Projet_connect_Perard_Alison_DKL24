@@ -41,7 +41,7 @@ const RegistrationForm = () => {
         }
         if (!validateEmail(formData.email)) {
             isValid = false;
-            formErrors.email = 'Invalid email';
+            formErrors.email = 'Invalid-email';
         }
         if (!validateAge(formData.birthDate)) {
             isValid = false;
@@ -56,6 +56,7 @@ const RegistrationForm = () => {
         return isValid;
     };
 
+    // Avoid submit with empty fied
     const isFormValid = () => {
         return Object.values(formData).every(value => value !== '') && Object.keys(errors).length === 0;
     };
