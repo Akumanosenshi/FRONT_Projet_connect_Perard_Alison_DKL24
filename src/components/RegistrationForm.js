@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { validateEmail, validatePostalCode, validateAge, validateName } from '../utils/validators';
 import './RegistrationForm.css';
 
@@ -13,50 +13,104 @@ const RegistrationForm = () => {
     });
 
     const [errors, setErrors] = useState({});
+    const [isFormValid, setIsFormValid] = useState(false);
+    const [successMessage, setSuccessMessage] = useState('');  // Nouvel état pour le message de succès
+
+    useEffect(() => {
+        // Met à jour l'état de validation du formulaire à chaque modification de formData ou errors
+        setIsFormValid(Object.values(formData).every(value => value.trim() !== '') &&
+            Object.keys(errors).every(key => !errors[key]));
+    }, [formData, errors]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
+
+        // Valider le champ spécifique en fonction de son nom
+        validateField(name, value);
     };
 
-    const handleSubmit = (e) => {
+    const validateField = (name, value) => {
+        let error = '';
+
+        switch (name) {
+            case 'firstName':
+            case 'lastName':
+                if (!validateName(value)) {
+                    error = 'Invalid name';
+                }
+                break;
+            case 'email':
+                if (!validateEmail(value)) {
+                    error = 'Invalid email';
+                }
+                break;
+            case 'birthDate':
+                if (!validateAge(value)) {
+                    error = 'You must be over 18';
+                }
+                break;
+            case 'postalCode':
+                if (!validatePostalCode(value)) {
+                    error = 'Invalid postal code';
+                }
+                break;
+            default:
+                break;
+        }
+
+        // Mettre à jour l'objet des erreurs
+        setErrors((prevErrors) => ({
+            ...prevErrors,
+            [name]: error
+        }));
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (validateForm()) {
-            console.log('Form Submitted', formData);
-        }
-    };
 
-    const validateForm = () => {
-        let formErrors = {};
-        let isValid = true;
+        // Log du contenu du formulaire avant l'envoi
+        console.log("Sending form data:", formData);
 
-        if (!validateName(formData.firstName)) {
-            isValid = false;
-            formErrors.firstName = 'Invalid first name';
-        }
-        if (!validateName(formData.lastName)) {
-            isValid = false;
-            formErrors.lastName = 'Invalid last name';
-        }
-        if (!validateEmail(formData.email)) {
-            isValid = false;
-            formErrors.email = 'Invalid email';
-        }
-        if (!validateAge(formData.birthDate)) {
-            isValid = false;
-            formErrors.birthDate = 'You must be over 18';
-        }
-        if (!validatePostalCode(formData.postalCode)) {
-            isValid = false;
-            formErrors.postalCode = 'Invalid postal code';
-        }
+        if (isFormValid) {
+            try {
+                const response = await fetch(`${process.env.REACT_APP_API_URL}/users`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData),
+                });
 
-        setErrors(formErrors);
-        return isValid;
-    };
+                if (response.ok) {
+                    // Log du succès de l'envoi
+                    console.log('Form submission successful:', formData);
 
-    const isFormValid = () => {
-        return Object.values(formData).every(value => value !== '') && Object.keys(errors).length === 0;
+                    // Vider le formulaire après soumission réussie
+                    setFormData({
+                        firstName: '',
+                        lastName: '',
+                        email: '',
+                        birthDate: '',
+                        city: '',
+                        postalCode: ''
+                    });
+
+                    // Afficher un message de succès
+                    setSuccessMessage('Form submitted successfully!');
+                    // Effacer le message de succès après 5 secondes
+                    setTimeout(() => setSuccessMessage(''), 5000);
+                } else {
+                    // Log de l'échec de l'envoi avec la réponse du serveur
+                    console.error('Form submission failed. Server responded with:', response.statusText);
+                }
+            } catch (err) {
+                // Log de l'erreur si la requête échoue
+                console.error('Form submission error:', err);
+            }
+        } else {
+            console.log("Form is invalid and won't be submitted.");
+        }
     };
 
     return (
@@ -91,9 +145,10 @@ const RegistrationForm = () => {
                 <input id="postalCode" type="text" name="postalCode" value={formData.postalCode} onChange={handleChange} />
                 {errors.postalCode && <span>{errors.postalCode}</span>}
             </div>
-            <button type="submit" disabled={!isFormValid()}>
+            <button onClick={handleSubmit} type="button" disabled={!isFormValid} >
                 Save
             </button>
+            {successMessage && <div className="success-message">{successMessage}</div>}
         </form>
     );
 };
