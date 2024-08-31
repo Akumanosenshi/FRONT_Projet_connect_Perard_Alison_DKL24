@@ -38,7 +38,7 @@
   "homepage": "https://Akumanosenshi.github.io/front_projet_connect_perard_alison_dkl24",
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "@testing-library/jest-dom": "^6.4.8",
+    "@testing-library/jest-dom": "^6.5.0",
     "@testing-library/react": "^16.0.0",
     "jest": "^27.5.1"
   }

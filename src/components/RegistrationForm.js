@@ -83,8 +83,6 @@ const RegistrationForm = () => {
                 });
 
                 if (response.ok) {
-                    // Log du succès de l'envoi
-                    console.log('Form submission successful:', formData);
 
                     // Vider le formulaire après soumission réussie
                     setFormData({
@@ -95,7 +93,6 @@ const RegistrationForm = () => {
                         city: '',
                         postalCode: ''
                     });
-
                     // Afficher un message de succès
                     setSuccessMessage('Form submitted successfully!');
                     // Effacer le message de succès après 5 secondes
@@ -108,8 +105,6 @@ const RegistrationForm = () => {
                 // Log de l'erreur si la requête échoue
                 console.error('Form submission error:', err);
             }
-        } else {
-            console.log("Form is invalid and won't be submitted.");
         }
     };
 
